@@ -1,15 +1,15 @@
 package repository;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
+
+import java.io.File;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
 import model.FriendHelp;
@@ -17,66 +17,48 @@ import model.FriendHelp;
 public class FriendHelpRepository {
 
     public static ArrayList<FriendHelp> FriendHelps = new ArrayList<>();
-    private static final String FILE_NAME = "src/resources/friendHelps.json";
+    private static final String FILE_NAME = "src/resources/friendHelps.txt";
 
     public static void LoadFriendHelps() {
         FriendHelps.clear();
-
-        try (FileReader reader = new FileReader(FILE_NAME)) {
-            BufferedReader bufferedReader = new BufferedReader(reader);
-            String line;
-            List<Map<String, String>> friendHelpList = new ArrayList<>();
-
-            while ((line = bufferedReader.readLine()) != null) {
-                if (line.isEmpty() || line.startsWith("//")) {
-                    continue; // Skip empty lines and comments
-                }
-                Map<String, String> friendHelpMap = parseLine(line);
-                friendHelpList.add(friendHelpMap);
+        File file = new File(FILE_NAME);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                System.err.println("Error creating file: " + e.getMessage());
             }
-
-            for (Map<String, String> friendHelpMap : friendHelpList) {
-                String whoAskedForHelp = friendHelpMap.get("WhoAskedForHelp");
-                String answerGiver = friendHelpMap.get("AnswerGiver");
-                String answer = friendHelpMap.get("Answer");
-                String question = friendHelpMap.get("Question");
-
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String whoAskedForHelp = line;
+                String answerGiver = reader.readLine();
+                String answer = reader.readLine();
+                String question = reader.readLine();
+                reader.readLine(); // Consume empty line
                 FriendHelps.add(new FriendHelp(whoAskedForHelp, answerGiver, answer, question));
             }
         } catch (IOException e) {
-            // Handle potential IOException and create an empty file if it doesn't exist
-            if (e instanceof FileNotFoundException) {
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-                    writer.write(""); // Create an empty file
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            } else {
-                e.printStackTrace();
-            }
+            System.err.println("Error loading FriendHelps: " + e.getMessage());
         }
     }
 
     public static void SaveFriendHelps() {
-        List<Map<String, String>> friendHelpList = new ArrayList<>();
 
-        for (FriendHelp friendHelp : FriendHelps) {
-            Map<String, String> friendHelpMap = new HashMap<>();
-            friendHelpMap.put("WhoAskedForHelp", friendHelp.getWhoAskedForHelp());
-            friendHelpMap.put("AnswerGiver", friendHelp.getAnswerGiver());
-            friendHelpMap.put("Answer", friendHelp.getAnswer());
-            friendHelpMap.put("Question", friendHelp.getQuestion());
-
-            friendHelpList.add(friendHelpMap);
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            for (Map<String, String> friendHelpMap : friendHelpList) {
-                writer.write(toJsonString(friendHelpMap, 2) + "\n"); // Indent with 2 spaces
+        try (FileWriter writer = new FileWriter(FILE_NAME)) {
+            for (FriendHelp help : FriendHelps) {
+                writer.write(help.getWhoAskedForHelp() + "\n");
+                writer.write(help.getAnswerGiver() + "\n");
+                writer.write(help.getAnswer() + "\n");
+                writer.write(help.getQuestion() + "\n");
+                writer.write("\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error saving FriendHelps: " + e.getMessage());
         }
+
     }
 
     private static Map<String, String> parseLine(String line) {
