@@ -30,17 +30,6 @@ public class HelpUsedByContestantInSetRepository {
         return null;
     }
 
-    public static boolean useHelp(HelpUsedByContestantInSet helpUsedByContestantInSet) {
-        HelpUsedByContestantInSet help = hasUsedHelpUsedByContestantInSet(helpUsedByContestantInSet);
-
-        if (help == null) {
-            HelpsUsedByContestantsInSets.add(helpUsedByContestantInSet);
-            saveHelpsUsedByContestantsInSets();
-            return true;
-        }
-        return help.getQuestion() == helpUsedByContestantInSet.getQuestion();
-    }
-
     public static void loadHelpsUsedByContestantsInSets() {
 
         ArrayList<HelpUsedByContestantInSet> helpsUsedByContestantsInSets = new ArrayList<>();

@@ -3,10 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/GitHub/QuizzGame/QuizzGame/Server/Server/src/repository/FriendHelpRepository.java</file>
-            <file>file:/C:/GitHub/QuizzGame/QuizzGame/Server/Server/src/service/ActiveSetService.java</file>
-            <file>file:/C:/GitHub/QuizzGame/QuizzGame/Server/Server/src/service/FriendHelpService.java</file>
             <file>file:/C:/GitHub/QuizzGame/QuizzGame/Server/Server/src/main/ConnectedClients.java</file>
+            <file>file:/C:/GitHub/QuizzGame/QuizzGame/Server/Server/src/main/Controller.java</file>
         </group>
     </open-files>
 </project-private>

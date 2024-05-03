@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import main.ClientMain;
+import main.Main;
 import model.User;
 
 public class AdminWindow extends javax.swing.JFrame {
@@ -49,7 +49,7 @@ public class AdminWindow extends javax.swing.JFrame {
     private void fetchAndDisplayActiveSet() {
         activeSets.clear();
         String request = "GetActiveSet\nEMPTY";
-        String response = ClientMain.HandleDataFromRequestAfterResponse(request);
+        String response = Main.HandleDataFromRequestAfterResponse(request);
 
         String[] lines = response.split("\n");
         for (String line : lines) {
@@ -96,7 +96,7 @@ public class AdminWindow extends javax.swing.JFrame {
     private void fetchAndDisplayUsers() {
         users.clear();
         String request = "GetAllUsers\nEMPTY";
-        String response = ClientMain.HandleDataFromRequestAfterResponse(request);
+        String response = Main.HandleDataFromRequestAfterResponse(request);
         String[] lines = response.split("\n");
         for (String line : lines) {
             String[] parts = line.split(":");
@@ -366,7 +366,7 @@ public class AdminWindow extends javax.swing.JFrame {
     private void jMenu1MenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenu1MenuSelected
         dispose();
         new LoginWindow().setVisible(true);
-        ClientMain.authorizationToken = "EMPTY";
+        Main.authorizationToken = "EMPTY";
     }//GEN-LAST:event_jMenu1MenuSelected
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -378,7 +378,7 @@ public class AdminWindow extends javax.swing.JFrame {
         String textField2Value = jPasswordField1.getText();
         String selectedItem = (String) jComboBox1.getSelectedItem();
         String request = "AddUser\n" + textField1Value + ":" + textField2Value + ":" + selectedItem;
-        String response = ClientMain.HandleDataFromRequestAfterResponse(request);
+        String response = Main.HandleDataFromRequestAfterResponse(request);
 
         if (response.equals("SUCCESS")) {
             jLabel1.setText("SUCCES IN ADDING USER");
@@ -408,7 +408,7 @@ public class AdminWindow extends javax.swing.JFrame {
             }
 
             String selectedUsername = (String) jTable1.getValueAt(selectedRowIndex, 0);
-            ClientMain.HandleDataFromRequestAfterResponse("RemoveUser\n" + selectedUsername);
+            Main.HandleDataFromRequestAfterResponse("RemoveUser\n" + selectedUsername);
             fetchAndDisplayUsers();
 
         } else {
@@ -417,22 +417,22 @@ public class AdminWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        ClientMain.HandleDataFromRequestAfterResponse("SetActiveSet\n" + "1");
+        Main.HandleDataFromRequestAfterResponse("SetActiveSet\n" + "1");
         fetchAndDisplayActiveSet();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        ClientMain.HandleDataFromRequestAfterResponse("SetActiveSet\n" + "4");
+        Main.HandleDataFromRequestAfterResponse("SetActiveSet\n" + "4");
         fetchAndDisplayActiveSet();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        ClientMain.HandleDataFromRequestAfterResponse("SetActiveSet\n" + "2");
+        Main.HandleDataFromRequestAfterResponse("SetActiveSet\n" + "2");
         fetchAndDisplayActiveSet();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        ClientMain.HandleDataFromRequestAfterResponse("SetActiveSet\n" + "3");
+        Main.HandleDataFromRequestAfterResponse("SetActiveSet\n" + "3");
         fetchAndDisplayActiveSet();
     }//GEN-LAST:event_jButton5ActionPerformed
 

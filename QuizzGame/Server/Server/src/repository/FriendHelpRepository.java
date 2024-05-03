@@ -13,7 +13,11 @@ import model.FriendHelp;
 
 public class FriendHelpRepository {
 
-    public static ArrayList<FriendHelp> FriendHelps = new ArrayList<>();
+    public static ArrayList<FriendHelp> getFriendHelps() {
+        return FriendHelps;
+    }
+
+    private static ArrayList<FriendHelp> FriendHelps = new ArrayList<>();
     private static final String FILE_NAME = "src/resources/friendHelps.txt";
 
     public static void loadFriendHelps() {
@@ -80,21 +84,10 @@ public class FriendHelpRepository {
     }
 
     public static void addFriendHelp(FriendHelp friendHelp) {
-        boolean duplicateExists = false;
-        for (FriendHelp existingHelp : FriendHelps) {
-            if (existingHelp.getWhoAskedForHelp().equals(friendHelp.getWhoAskedForHelp())
-                    && existingHelp.getAnswerGiver().equals(friendHelp.getAnswerGiver())
-                    && existingHelp.getQuestion().equals(friendHelp.getQuestion())) {
-                duplicateExists = true;
-                break;
-            }
-        }
+        FriendHelps.add(friendHelp);
+        saveFriendHelps();
+        loadFriendHelps();
 
-        if (!duplicateExists) {
-            FriendHelps.add(friendHelp);
-            saveFriendHelps();
-            loadFriendHelps();
-        }
     }
 
     public static FriendHelp FindQuestionToAnswer(String username, String whoAsked, String question) {
@@ -106,6 +99,18 @@ public class FriendHelpRepository {
             }
         }
         return null;
+    }
+
+    public static void updateFriendHelpWithAnswer(FriendHelp friendHelp) {
+        for (FriendHelp existingHelp : FriendHelps) {
+            if (existingHelp.getWhoAskedForHelp().equals(friendHelp.getWhoAskedForHelp())
+                    && existingHelp.getAnswerGiver().equals(friendHelp.getAnswerGiver())
+                    && existingHelp.getQuestion().equals(friendHelp.getQuestion())) {
+                FriendHelps.add(friendHelp);
+                FriendHelps.remove(existingHelp);
+            }
+
+        }
     }
 
 }

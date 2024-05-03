@@ -11,7 +11,7 @@ import java.net.Socket;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-public class ClientMain {
+public class Main {
 
     private static Socket socket;
     private static BufferedReader br;

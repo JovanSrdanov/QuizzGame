@@ -7,9 +7,9 @@ import model.FriendHelp;
 import model.HelpUsedByContestantInSet;
 import model.Question;
 import model.User;
-import repository.FriendHelpRepository;
-import repository.HelpUsedByContestantInSetRepository;
 import service.ActiveSetService;
+import service.FriendHelpService;
+import service.HelpUsedByContestantInSetService;
 import service.QuestionSetService;
 import service.UserService;
 
@@ -32,13 +32,13 @@ public class Controller {
             if (TokenUtils.isValidDecryption(authtoken)) {
                 user = UserService.FindUser(TokenUtils.getUsernameFromEncryptedData(authtoken));
                 if (user == null) {
-                    pw.println("ANOUTHORIZED");
+                    pw.println("UNAUTHORIZED");
                     return;
                 }
                 typeOfUser = user.getTypeOfUser();
             } else {
                 if (!"Login".equals(method)) {
-                    pw.println("ANOUTHORIZED");
+                    pw.println("UNAUTHORIZED");
                     return;
                 }
             }
@@ -172,9 +172,7 @@ public class Controller {
             String password = loginInfo[1];
             User.TypeOfUser typeOfUser = loginInfo[2].equals("admin") ? User.TypeOfUser.ADMIN : User.TypeOfUser.CONTESTANT;
             User u = UserService.FindUserByUsernamePasswordAndRole(username, password, typeOfUser);
-
             if (u != null) {
-
                 pw.println(loginInfo[2] + ":" + TokenUtils.encryptUsernameAndDate(username) + ":" + username);
             } else {
                 pw.println("FAILED");
@@ -234,26 +232,30 @@ public class Controller {
     }
 
     private static void GetCurrentQuestion(User user, String body, PrintWriter pw) {
+        try {
 
-        int ActiveSet = ActiveSetService.getActiveSet();
-        if (ActiveSet != user.getCurrentSet()) {
-            user.setCurrentSet(ActiveSet);
-            user.setCurrentQuestionInSet(1);
-        }
-        UserService.updateUser(user);
+            int ActiveSet = ActiveSetService.getActiveSet();
+            if (ActiveSet != user.getCurrentSet()) {
+                user.setCurrentSet(ActiveSet);
+                user.setCurrentQuestionInSet(1);
+            }
+            UserService.updateUser(user);
 
-        Question question = QuestionSetService.getQuestion(user.getCurrentSet(), user.getCurrentQuestionInSet());
-        if (question == null || question.getQuestionNumber() == 11) {
-            pw.println("NO QUESTION");
-            return;
-        }
+            Question question = QuestionSetService.getQuestion(user.getCurrentSet(), user.getCurrentQuestionInSet());
+            if (question == null || question.getQuestionNumber() == 11) {
+                pw.println("NO QUESTION");
+                return;
+            }
 
-        StringBuilder sb = new StringBuilder("");
-        sb.append(question.getQuestion()).append("\n");
-        for (String s : question.getAnswers()) {
-            sb.append(s).append("\n");
+            StringBuilder sb = new StringBuilder("");
+            sb.append(question.getQuestion()).append("\n");
+            for (String s : question.getAnswers()) {
+                sb.append(s).append("\n");
+            }
+            pw.println(sb);
+        } catch (Exception e) {
+            pw.println("ERROR");
         }
-        pw.println(sb);
 
     }
 
@@ -285,16 +287,13 @@ public class Controller {
 
     private static void HelpFriend(User user, String body, PrintWriter pw) {
         try {
-
-            FriendHelp friendHelp = FriendHelpRepository.FindQuestionToAnswer(user.getUsername(), body.split("\n")[1], body.split("\n")[2]);
-
+            FriendHelp friendHelp = FriendHelpService.FindQuestionToAnswer(user.getUsername(), body.split("\n")[1], body.split("\n")[2]);
             if (friendHelp == null) {
                 pw.println("FriendHelp NOT FOUND");
                 return;
             }
             friendHelp.setAnswer(body.split("\n")[3]);
-            FriendHelpRepository.saveFriendHelps();
-
+            FriendHelpService.updateFriendHelpWithAnswer(friendHelp);
             pw.println("SUCCESS");
 
         } catch (Exception e) {
@@ -306,7 +305,7 @@ public class Controller {
         try {
 
             StringBuilder sb = new StringBuilder("");
-            for (FriendHelp fh : FriendHelpRepository.getUnAnsweredQuestions(user.getUsername())) {
+            for (FriendHelp fh : FriendHelpService.getUnAnsweredQuestions(user.getUsername())) {
                 sb.append(fh.getWhoAskedForHelp()).append("__").append(fh.getAnswerGiver()).append("__").append(fh.getAnswer()).append("__").append(fh.getQuestion()).append("\n");
             }
             pw.println(sb);
@@ -325,14 +324,14 @@ public class Controller {
                 return;
             }
             HelpUsedByContestantInSet help = new HelpUsedByContestantInSet(user.getCurrentSet(), user.getCurrentQuestionInSet(), user.getUsername(), HELP_ASK_FRIEND);
-            if (HelpUsedByContestantInSetRepository.useHelp(help)) {
+            if (HelpUsedByContestantInSetService.useHelp(help)) {
 
                 Question question = QuestionSetService.getQuestion(user.getCurrentSet(), user.getCurrentQuestionInSet());
                 if (question == null) {
                     pw.println("NO QUESTION");
                     return;
                 }
-                FriendHelpRepository.addFriendHelp(new FriendHelp(user.getUsername(), body.split(":")[1], "EMPTY", question.getQuestion()));
+                FriendHelpService.addFriendHelp(new FriendHelp(user.getUsername(), body.split(":")[1], "EMPTY", question.getQuestion()));
                 pw.println("SUCCESS");
 
             } else {
@@ -345,11 +344,9 @@ public class Controller {
     }
 
     private static void GetHelpFromFriends(User user, String body, PrintWriter pw) {
-
         try {
-
             StringBuilder sb = new StringBuilder("");
-            for (FriendHelp fh : FriendHelpRepository.getHelpAskedByContestant(user.getUsername())) {
+            for (FriendHelp fh : FriendHelpService.getHelpAskedByContestant(user.getUsername())) {
                 sb.append(fh.getWhoAskedForHelp()).append("__").append(fh.getAnswerGiver()).append("__").append(fh.getAnswer()).append("__").append(fh.getQuestion()).append("\n");
             }
             pw.println(sb);
@@ -363,7 +360,7 @@ public class Controller {
         try {
 
             HelpUsedByContestantInSet help = new HelpUsedByContestantInSet(user.getCurrentSet(), user.getCurrentQuestionInSet(), user.getUsername(), HELP_CHANGE_QUESTION);
-            if (HelpUsedByContestantInSetRepository.useHelp(help)) {
+            if (HelpUsedByContestantInSetService.useHelp(help)) {
                 Question question = QuestionSetService.getQuestion(user.getCurrentSet(), 11);
                 if (question == null) {
                     pw.println("NO QUESTION");
@@ -392,7 +389,7 @@ public class Controller {
         try {
 
             HelpUsedByContestantInSet help = new HelpUsedByContestantInSet(user.getCurrentSet(), user.getCurrentQuestionInSet(), user.getUsername(), HELP_HALF_HALF);
-            if (HelpUsedByContestantInSetRepository.useHelp(help)) {
+            if (HelpUsedByContestantInSetService.useHelp(help)) {
                 StringBuilder sb = new StringBuilder("");
                 Question question = QuestionSetService.getQuestion(user.getCurrentSet(), user.getCurrentQuestionInSet());
                 if (question == null) {

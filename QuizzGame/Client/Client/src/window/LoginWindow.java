@@ -2,7 +2,7 @@ package window;
 
 import java.awt.Color;
 import javax.swing.SwingConstants;
-import main.ClientMain;
+import main.Main;
 
 @SuppressWarnings("serial")
 public class LoginWindow extends javax.swing.JFrame {
@@ -131,15 +131,15 @@ public class LoginWindow extends javax.swing.JFrame {
         String role = (String) ROLE.getSelectedItem();
 
         String request = "Login\n" + username + ":" + password + ":" + role;
-        String response = ClientMain.HandleDataFromRequestAfterResponse(request).trim();
+        String response = Main.HandleDataFromRequestAfterResponse(request).trim();
 
         if (response.equals("FAILED")) {
             jLabel1.setBackground(Color.RED);
             jLabel1.setText("Login failed. Please check your credentials.");
 
         } else {
-            ClientMain.authorizationToken = response.split(":")[1];
-            ClientMain.username = response.split(":")[2];
+            Main.authorizationToken = response.split(":")[1];
+            Main.username = response.split(":")[2];
             jLabel1.setBackground(Color.GREEN); // Set text color to red
             jLabel1.setText("Login successful!");
             if (response.split(":")[0].equals("admin")) {
