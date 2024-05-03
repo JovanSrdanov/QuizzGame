@@ -139,6 +139,7 @@ public class LoginWindow extends javax.swing.JFrame {
 
         } else {
             ClientMain.authorizationToken = response.split(":")[1];
+            ClientMain.username = response.split(":")[2];
             jLabel1.setBackground(Color.GREEN); // Set text color to red
             jLabel1.setText("Login successful!");
             if (response.split(":")[0].equals("admin")) {

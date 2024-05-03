@@ -70,7 +70,7 @@ public class ContestantWindow extends javax.swing.JFrame {
 
     private void fetchFriendsInNeedOfHelp() {
         friendsInNeedOfHelp.clear();
-        String request = "FriendsInNeedOfHelp\n" + ClientMain.authorizationToken;
+        String request = "FriendsInNeedOfHelp\n" + "EMPTY";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         String[] lines = response.split("\n");
         for (String line : lines) {
@@ -108,7 +108,7 @@ public class ContestantWindow extends javax.swing.JFrame {
 
     private void fetchGetHelpFromFriends() {
         friendHelps.clear();
-        String request = "GetHelpFromFriends\n" + ClientMain.authorizationToken;
+        String request = "GetHelpFromFriends\n" + "EMPTY";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         String[] lines = response.split("\n");
         for (String line : lines) {
@@ -148,7 +148,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }
 
     private void fetchQuestion() {
-        String request = "GetCurrentQuestion\n" + ClientMain.authorizationToken;
+        String request = "GetCurrentQuestion\n" + "EMPTY";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         String[] parts = response.split("\n");
 
@@ -191,24 +191,18 @@ public class ContestantWindow extends javax.swing.JFrame {
 
         ArrayList<User> usersCopy = new ArrayList<>(users);
 
-        usersCopy.removeIf(user -> user.getUsername().equals(ClientMain.authorizationToken));
+        usersCopy.removeIf(user -> user.getUsername().equals(ClientMain.username));
         jButton3.setEnabled(true);
         jComboBox1.setVisible(true);
         jComboBox1.removeAllItems();
-        // Check if the copy of users list is empty
+
         if (usersCopy.isEmpty()) {
-            // Disable "Ask friend" button
             jButton3.setEnabled(false);
-            // Hide the drop box
             jComboBox1.setVisible(false);
         } else {
-            // Enable "Ask friend" button
             jButton3.setEnabled(true);
-            // Show the drop box
             jComboBox1.setVisible(true);
-            // Clear existing items in the drop box
             jComboBox1.removeAllItems();
-            // Add usernames from the copy to the drop box
             for (User user : usersCopy) {
                 jComboBox1.addItem(user.getUsername());
             }
@@ -525,7 +519,7 @@ public class ContestantWindow extends javax.swing.JFrame {
             selectedAnswer = jRadioButton4.getText();
         }
 
-        String request = "AnswerCurretnQuestion\n" + ClientMain.authorizationToken + "\n" + jLabel1.getText() + "\n" + selectedAnswer + "\n";
+        String request = "AnswerCurretnQuestion\n" + "EMPTY" + "\n" + jLabel1.getText() + "\n" + selectedAnswer + "\n";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         if (response.equals("CORRECT")) {
 
@@ -538,7 +532,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String request = "HalfHalfQuestion\n" + ClientMain.authorizationToken + "\n";
+        String request = "HalfHalfQuestion\n" + "EMPTY" + "\n";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         if (response.equals("CAN NOT USE THIS HELP AT THIS MOMENT!")) {
             JOptionPane.showMessageDialog(this, response, response, JOptionPane.ERROR_MESSAGE);
@@ -572,7 +566,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        String request = "AskForHelpFromFriend\n" + ClientMain.authorizationToken + ":" + (String) jComboBox1.getSelectedItem();
+        String request = "AskForHelpFromFriend\n" + "EMPTY" + ":" + (String) jComboBox1.getSelectedItem();
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         if (!response.equals("SUCCESS")) {
             JOptionPane.showMessageDialog(this, response, response, JOptionPane.ERROR_MESSAGE);
@@ -582,7 +576,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        String request = "SwitchQuestion\n" + ClientMain.authorizationToken + "\n";
+        String request = "SwitchQuestion\n" + "EMPTY";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         if (response.equals("CAN NOT USE THIS HELP AT THIS MOMENT!")) {
             JOptionPane.showMessageDialog(this, response, response, JOptionPane.ERROR_MESSAGE);
@@ -646,7 +640,7 @@ public class ContestantWindow extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Not answered!", "Not answered!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            String request = "HelpFriend\n" + ClientMain.authorizationToken + "\n" + WhoAsked + "\n" + Question + "\n" + Answer;
+            String request = "HelpFriend\n" + "EMPTY" + "\n" + WhoAsked + "\n" + Question + "\n" + Answer;
 
             String response = ClientMain.HandleDataFromRequestAfterResponse(request);
             if (response.equals("SUCCESS")) {
@@ -668,7 +662,7 @@ public class ContestantWindow extends javax.swing.JFrame {
 
     private void fetchAndDisplayUsers() {
         users.clear();
-        String request = "GetTableResults\n" + ClientMain.authorizationToken + "\n";
+        String request = "GetTableResults\n" + "EMPTY";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         String[] lines = response.split("\n");
         for (String line : lines) {

@@ -175,7 +175,7 @@ public class Controller {
 
             if (u != null) {
 
-                pw.println(loginInfo[2] + ":" + TokenUtils.encryptUsernameAndDate(username));
+                pw.println(loginInfo[2] + ":" + TokenUtils.encryptUsernameAndDate(username) + ":" + username);
             } else {
                 pw.println("FAILED");
             }

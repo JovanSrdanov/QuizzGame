@@ -17,6 +17,7 @@ public class ClientMain {
     private static BufferedReader br;
     public static PrintWriter pw;
     public static String authorizationToken = "EMPTY";
+    public static String username = "EMPTY";
 
     public static void main(String args[]) {
         try {
