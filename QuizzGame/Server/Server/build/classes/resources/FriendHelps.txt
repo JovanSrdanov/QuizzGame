@@ -3,3 +3,8 @@ b
 EMPTY
 Najveći okean na Zemlji je:
 
+x
+gas
+EMPTY
+"Znam da ništa ne znam" je izreka koja se pripisuje:
+

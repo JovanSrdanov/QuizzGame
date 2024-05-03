@@ -4,3 +4,4 @@
 3:2:b:help_ask_friend
 3:2:b:help_change_question
 3:3:b:help_half_half
+4:1:x:help_ask_friend

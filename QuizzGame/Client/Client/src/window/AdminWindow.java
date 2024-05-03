@@ -50,13 +50,16 @@ public class AdminWindow extends javax.swing.JFrame {
         activeSets.clear();
         String request = "GetActiveSet\nEMPTY";
         String response = Main.HandleDataFromRequestAfterResponse(request);
-
-        String[] lines = response.split("\n");
-        for (String line : lines) {
-            String[] parts = line.split(":");
-            if (parts.length == 1) {
-                activeSets.add(Integer.parseInt(parts[0]));
+        try {
+            String[] lines = response.split("\n");
+            for (String line : lines) {
+                String[] parts = line.split(":");
+                if (parts.length == 1) {
+                    activeSets.add(Integer.parseInt(parts[0]));
+                }
             }
+        } catch (Exception e) {
+            activeSets.clear();
         }
         int lastActiveSet = activeSets.isEmpty() ? -1 : activeSets.get(activeSets.size() - 1);
 
