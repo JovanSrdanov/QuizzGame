@@ -133,12 +133,12 @@ public class LoginWindow extends javax.swing.JFrame {
         String request = "Login\n" + username + ":" + password + ":" + role;
         String response = ClientMain.HandleDataFromRequestAfterResponse(request).trim();
 
-        if (response.equals("Failed")) {
+        if (response.equals("FAILED")) {
             jLabel1.setBackground(Color.RED);
             jLabel1.setText("Login failed. Please check your credentials.");
 
         } else {
-            ClientMain.currentUser = response.split(":")[1];
+            ClientMain.authorizationToken = response.split(":")[1];
             jLabel1.setBackground(Color.GREEN); // Set text color to red
             jLabel1.setText("Login successful!");
             if (response.split(":")[0].equals("admin")) {

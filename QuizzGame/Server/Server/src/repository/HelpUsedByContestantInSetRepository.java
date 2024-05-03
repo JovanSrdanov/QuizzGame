@@ -14,12 +14,12 @@ public class HelpUsedByContestantInSetRepository {
     public static ArrayList<HelpUsedByContestantInSet> HelpsUsedByContestantsInSets = new ArrayList<>();
     private static final String FILE_NAME = "src/resources/helpUsed.txt";
 
-    public static void AddHelpUsedByContestantInSet(HelpUsedByContestantInSet helpUsedByContestantInSet) {
+    public static void addHelpUsedByContestantInSet(HelpUsedByContestantInSet helpUsedByContestantInSet) {
         HelpsUsedByContestantsInSets.add(helpUsedByContestantInSet);
-        SaveHelpsUsedByContestantsInSets();
+        saveHelpsUsedByContestantsInSets();
     }
 
-    public static HelpUsedByContestantInSet HasUsedHelpUsedByContestantInSet(HelpUsedByContestantInSet helpUsedByContestantInSet) {
+    public static HelpUsedByContestantInSet hasUsedHelpUsedByContestantInSet(HelpUsedByContestantInSet helpUsedByContestantInSet) {
         for (HelpUsedByContestantInSet help : HelpsUsedByContestantsInSets) {
             if (help.getSet() == helpUsedByContestantInSet.getSet()
                     && help.getContestant().equals(helpUsedByContestantInSet.getContestant())
@@ -30,18 +30,18 @@ public class HelpUsedByContestantInSetRepository {
         return null;
     }
 
-    public static boolean UseHelp(HelpUsedByContestantInSet helpUsedByContestantInSet) {
-        HelpUsedByContestantInSet help = HasUsedHelpUsedByContestantInSet(helpUsedByContestantInSet);
+    public static boolean useHelp(HelpUsedByContestantInSet helpUsedByContestantInSet) {
+        HelpUsedByContestantInSet help = hasUsedHelpUsedByContestantInSet(helpUsedByContestantInSet);
 
         if (help == null) {
             HelpsUsedByContestantsInSets.add(helpUsedByContestantInSet);
-            SaveHelpsUsedByContestantsInSets();
+            saveHelpsUsedByContestantsInSets();
             return true;
         }
         return help.getQuestion() == helpUsedByContestantInSet.getQuestion();
     }
 
-    public static void LoadHelpsUsedByContestantsInSets() {
+    public static void loadHelpsUsedByContestantsInSets() {
 
         ArrayList<HelpUsedByContestantInSet> helpsUsedByContestantsInSets = new ArrayList<>();
 
@@ -79,7 +79,7 @@ public class HelpUsedByContestantInSetRepository {
         HelpsUsedByContestantsInSets = helpsUsedByContestantsInSets;
     }
 
-    public static void SaveHelpsUsedByContestantsInSets() {
+    public static void saveHelpsUsedByContestantsInSets() {
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter(new FileWriter(FILE_NAME));

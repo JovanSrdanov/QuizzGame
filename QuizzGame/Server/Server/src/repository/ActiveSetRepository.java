@@ -28,7 +28,7 @@ public class ActiveSetRepository {
         }
     }
 
-    public static void LoadActiveSets() {
+    public static void loadActiveSets() {
 
         List<Integer> activeSets = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
@@ -38,7 +38,7 @@ public class ActiveSetRepository {
             }
         } catch (FileNotFoundException e) {
             activeSets.add(1);
-            SaveActiveSet();
+            saveActiveSet();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,7 +46,7 @@ public class ActiveSetRepository {
 
     }
 
-    private static void SaveActiveSet() {
+    private static void saveActiveSet() {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
             for (int activeSet : ActiveSets) {
@@ -58,9 +58,9 @@ public class ActiveSetRepository {
         }
     }
 
-    public static void SetActiveSet(int set) {
+    public static void setActiveSet(int set) {
         ActiveSets.add(set);
-        SaveActiveSet();
-        LoadActiveSets();
+        saveActiveSet();
+        loadActiveSets();
     }
 }

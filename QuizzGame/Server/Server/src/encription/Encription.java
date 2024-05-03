@@ -17,9 +17,6 @@ public class Encription {
     private static final String AES = "AES";
     private static final String AES_CIPHER_ALGORITHM = "AES/CBC/PKCS5PADDING";
 
-    public Encription() {
-    }
-
     private static SecretKey createAESKey() {
         try {
             SecureRandom secureRandom = new SecureRandom("RSZEOS2024".getBytes());

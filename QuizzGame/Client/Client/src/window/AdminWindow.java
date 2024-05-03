@@ -366,6 +366,7 @@ public class AdminWindow extends javax.swing.JFrame {
     private void jMenu1MenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenu1MenuSelected
         dispose();
         new LoginWindow().setVisible(true);
+        ClientMain.authorizationToken = "EMPTY";
     }//GEN-LAST:event_jMenu1MenuSelected
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed

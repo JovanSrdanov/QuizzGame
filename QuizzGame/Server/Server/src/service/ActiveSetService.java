@@ -9,7 +9,7 @@ public class ActiveSetService {
         if (ActiveSetRepository.getActiveSets().contains(set)) {
             return;
         }
-        ActiveSetRepository.SetActiveSet(set);
+        ActiveSetRepository.setActiveSet(set);
     }
 
     public static List<Integer> getActiveSets() {

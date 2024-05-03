@@ -46,7 +46,7 @@ public class Question {
         return answers;
     }
 
-    public boolean IsAnswerCorrect(String insertedAnswer) {
+    public boolean isAnswerCorrect(String insertedAnswer) {
         return insertedAnswer.equals(correctAnswer);
     }
 

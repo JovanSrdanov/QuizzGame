@@ -16,7 +16,7 @@ public class ClientMain {
     private static Socket socket;
     private static BufferedReader br;
     public static PrintWriter pw;
-    public static String currentUser = "";
+    public static String authorizationToken = "EMPTY";
 
     public static void main(String args[]) {
         try {
@@ -41,7 +41,7 @@ public class ClientMain {
     public static String HandleDataFromRequestAfterResponse(String request) {
         StringBuilder messageBuilder = new StringBuilder();
         try {
-            SendFunctionNameAndData(request);
+            RequestInterceptor(request);
             while (true) {
                 int character = br.read();
                 if (character == -1) {
@@ -67,10 +67,10 @@ public class ClientMain {
         return messageBuilder.toString();
     }
 
-    private static void SendFunctionNameAndData(String request) {
+    private static void RequestInterceptor(String request) {
         System.out.println("Message sent:");
         System.out.println(request);
-        pw.println(request);
+        pw.println(authorizationToken + "\n" + request);
     }
 
 }

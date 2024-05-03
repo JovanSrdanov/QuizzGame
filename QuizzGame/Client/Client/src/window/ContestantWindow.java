@@ -70,7 +70,7 @@ public class ContestantWindow extends javax.swing.JFrame {
 
     private void fetchFriendsInNeedOfHelp() {
         friendsInNeedOfHelp.clear();
-        String request = "FriendsInNeedOfHelp\n" + ClientMain.currentUser;
+        String request = "FriendsInNeedOfHelp\n" + ClientMain.authorizationToken;
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         String[] lines = response.split("\n");
         for (String line : lines) {
@@ -108,7 +108,7 @@ public class ContestantWindow extends javax.swing.JFrame {
 
     private void fetchGetHelpFromFriends() {
         friendHelps.clear();
-        String request = "GetHelpFromFriends\n" + ClientMain.currentUser;
+        String request = "GetHelpFromFriends\n" + ClientMain.authorizationToken;
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         String[] lines = response.split("\n");
         for (String line : lines) {
@@ -148,7 +148,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }
 
     private void fetchQuestion() {
-        String request = "GetCurrentQuestion\n" + ClientMain.currentUser;
+        String request = "GetCurrentQuestion\n" + ClientMain.authorizationToken;
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         String[] parts = response.split("\n");
 
@@ -191,7 +191,7 @@ public class ContestantWindow extends javax.swing.JFrame {
 
         ArrayList<User> usersCopy = new ArrayList<>(users);
 
-        usersCopy.removeIf(user -> user.getUsername().equals(ClientMain.currentUser));
+        usersCopy.removeIf(user -> user.getUsername().equals(ClientMain.authorizationToken));
         jButton3.setEnabled(true);
         jComboBox1.setVisible(true);
         jComboBox1.removeAllItems();
@@ -506,6 +506,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     private void jMenu1MenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenu1MenuSelected
         dispose();
         new LoginWindow().setVisible(true);
+        ClientMain.authorizationToken = "EMPTY";
     }//GEN-LAST:event_jMenu1MenuSelected
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
@@ -524,7 +525,7 @@ public class ContestantWindow extends javax.swing.JFrame {
             selectedAnswer = jRadioButton4.getText();
         }
 
-        String request = "AnswerCurretnQuestion\n" + ClientMain.currentUser + "\n" + jLabel1.getText() + "\n" + selectedAnswer + "\n";
+        String request = "AnswerCurretnQuestion\n" + ClientMain.authorizationToken + "\n" + jLabel1.getText() + "\n" + selectedAnswer + "\n";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         if (response.equals("CORRECT")) {
 
@@ -537,7 +538,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String request = "HalfHalfQuestion\n" + ClientMain.currentUser + "\n";
+        String request = "HalfHalfQuestion\n" + ClientMain.authorizationToken + "\n";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         if (response.equals("CAN NOT USE THIS HELP AT THIS MOMENT!")) {
             JOptionPane.showMessageDialog(this, response, response, JOptionPane.ERROR_MESSAGE);
@@ -571,7 +572,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        String request = "AskForHelpFromFriend\n" + ClientMain.currentUser + ":" + (String) jComboBox1.getSelectedItem();
+        String request = "AskForHelpFromFriend\n" + ClientMain.authorizationToken + ":" + (String) jComboBox1.getSelectedItem();
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         if (!response.equals("SUCCESS")) {
             JOptionPane.showMessageDialog(this, response, response, JOptionPane.ERROR_MESSAGE);
@@ -581,7 +582,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        String request = "SwitchQuestion\n" + ClientMain.currentUser + "\n";
+        String request = "SwitchQuestion\n" + ClientMain.authorizationToken + "\n";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         if (response.equals("CAN NOT USE THIS HELP AT THIS MOMENT!")) {
             JOptionPane.showMessageDialog(this, response, response, JOptionPane.ERROR_MESSAGE);
@@ -645,7 +646,7 @@ public class ContestantWindow extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Not answered!", "Not answered!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            String request = "HelpFriend\n" + ClientMain.currentUser + "\n" + WhoAsked + "\n" + Question + "\n" + Answer;
+            String request = "HelpFriend\n" + ClientMain.authorizationToken + "\n" + WhoAsked + "\n" + Question + "\n" + Answer;
 
             String response = ClientMain.HandleDataFromRequestAfterResponse(request);
             if (response.equals("SUCCESS")) {
@@ -667,7 +668,7 @@ public class ContestantWindow extends javax.swing.JFrame {
 
     private void fetchAndDisplayUsers() {
         users.clear();
-        String request = "GetTableResults\n" + ClientMain.currentUser + "\n";
+        String request = "GetTableResults\n" + ClientMain.authorizationToken + "\n";
         String response = ClientMain.HandleDataFromRequestAfterResponse(request);
         String[] lines = response.split("\n");
         for (String line : lines) {

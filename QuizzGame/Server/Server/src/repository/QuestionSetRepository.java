@@ -11,7 +11,7 @@ public class QuestionSetRepository {
 
     public static ArrayList<QuestionSet> QuestionSets = new ArrayList<>();
 
-    public static void LoadQuestionSets() {
+    public static void loadQuestionSets() {
         for (int j = 1; j <= 4; j++) {
             try (BufferedReader br = new BufferedReader(new FileReader("src/resources/set" + j + ".txt"))) {
                 String line;
@@ -54,7 +54,7 @@ public class QuestionSetRepository {
         }
     }
 
-    public static Question GetQuestion(int set, int questionNumber) {
+    public static Question getQuestion(int set, int questionNumber) {
         QuestionSet questionSet = null;
         for (QuestionSet qs : QuestionSets) {
             if (qs.getQuestionSetNumber() == set) {
@@ -65,7 +65,6 @@ public class QuestionSetRepository {
         if (questionSet == null) {
             return null;
         }
-
         Question question = null;
         for (Question q : questionSet.getQuestions()) {
             if (q.getQuestionNumber() == questionNumber) {
@@ -73,7 +72,6 @@ public class QuestionSetRepository {
                 break;
             }
         }
-
         return question;
     }
 

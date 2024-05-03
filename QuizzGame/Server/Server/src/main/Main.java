@@ -12,17 +12,17 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ServerMain {
+public class Main {
 
     private ServerSocket socket;
     private int port;
     private ArrayList<ConnectedClients> clients;
 
-    public ServerSocket getSsocket() {
+    public ServerSocket getSocket() {
         return socket;
     }
 
-    public void setSsocket(ServerSocket ssocket) {
+    public void setSocket(ServerSocket ssocket) {
         this.socket = ssocket;
     }
 
@@ -41,7 +41,7 @@ public class ServerMain {
             try {
                 client = this.socket.accept();
             } catch (IOException ex) {
-                Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             if (client != null) {
 
@@ -55,29 +55,29 @@ public class ServerMain {
         }
     }
 
-    public ServerMain(int port) {
+    public Main(int port) {
         this.clients = new ArrayList<>();
         try {
             this.port = port;
             this.socket = new ServerSocket(port);
         } catch (IOException ex) {
-            Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public static void main(String[] args) {
         System.out.println("SERVER STARTED");
-        LoadData();
-        ServerMain server = new ServerMain(6001);
+        loadData();
+        Main server = new Main(6001);
         server.acceptClients();
     }
 
-    private static void LoadData() {
-        QuestionSetRepository.LoadQuestionSets();
-        UserRepository.LoadUsers();
-        ActiveSetRepository.LoadActiveSets();
-        HelpUsedByContestantInSetRepository.LoadHelpsUsedByContestantsInSets();
-        FriendHelpRepository.LoadFriendHelps();
+    private static void loadData() {
+        QuestionSetRepository.loadQuestionSets();
+        UserRepository.loadUsers();
+        ActiveSetRepository.loadActiveSets();
+        HelpUsedByContestantInSetRepository.loadHelpsUsedByContestantsInSets();
+        FriendHelpRepository.loadFriendHelps();
     }
 
 }

@@ -8,9 +8,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import java.util.Map;
 
 import model.FriendHelp;
 
@@ -19,7 +16,7 @@ public class FriendHelpRepository {
     public static ArrayList<FriendHelp> FriendHelps = new ArrayList<>();
     private static final String FILE_NAME = "src/resources/friendHelps.txt";
 
-    public static void LoadFriendHelps() {
+    public static void loadFriendHelps() {
         FriendHelps.clear();
         File file = new File(FILE_NAME);
         if (!file.exists()) {
@@ -45,7 +42,7 @@ public class FriendHelpRepository {
         }
     }
 
-    public static void SaveFriendHelps() {
+    public static void saveFriendHelps() {
 
         try (FileWriter writer = new FileWriter(FILE_NAME)) {
             for (FriendHelp help : FriendHelps) {
@@ -61,27 +58,6 @@ public class FriendHelpRepository {
 
     }
 
-    private static Map<String, String> parseLine(String line) {
-        Map<String, String> friendHelpMap = new HashMap<>();
-        String[] keyValuePairs = line.split(",");
-        for (String keyValuePair : keyValuePairs) {
-            String[] keyValue = keyValuePair.trim().split(":");
-            friendHelpMap.put(keyValue[0].trim().replace("\"", ""), keyValue[1].trim().replace("\"", ""));
-        }
-        return friendHelpMap;
-    }
-
-    private static String toJsonString(Map<String, String> friendHelpMap, int indentLevel) {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> entry : friendHelpMap.entrySet()) {
-            sb.append(" ".repeat(indentLevel)).append("\"").append(entry.getKey()).append("\": \"").append(entry.getValue()).append("\",\n");
-        }
-        if (sb.length() > 1) {
-            sb.deleteCharAt(sb.length() - 2); // Remove trailing comma and newline
-        }
-        return sb.toString();
-    }
-
     public static ArrayList<FriendHelp> getHelpAskedByContestant(String username) {
         ArrayList<FriendHelp> friendHelps = new ArrayList<>();
         for (FriendHelp fh : FriendHelps) {
@@ -90,7 +66,6 @@ public class FriendHelpRepository {
             }
         }
         return friendHelps;
-
     }
 
     public static ArrayList<FriendHelp> getUnAnsweredQuestions(String username) {
@@ -104,7 +79,7 @@ public class FriendHelpRepository {
 
     }
 
-    public static void AddFriendHelp(FriendHelp friendHelp) {
+    public static void addFriendHelp(FriendHelp friendHelp) {
         boolean duplicateExists = false;
         for (FriendHelp existingHelp : FriendHelps) {
             if (existingHelp.getWhoAskedForHelp().equals(friendHelp.getWhoAskedForHelp())
@@ -117,8 +92,8 @@ public class FriendHelpRepository {
 
         if (!duplicateExists) {
             FriendHelps.add(friendHelp);
-            SaveFriendHelps();
-            LoadFriendHelps();
+            saveFriendHelps();
+            loadFriendHelps();
         }
     }
 

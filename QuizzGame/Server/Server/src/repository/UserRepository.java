@@ -16,7 +16,7 @@ import model.User;
 
 public class UserRepository {
 
-    public static ArrayList<User> Users = new ArrayList<>();
+    private static final ArrayList<User> Users = new ArrayList<>();
     private static final String FILE_NAME = "src/resources/users.txt";
 
     public static User FindUser(String username) {
@@ -30,12 +30,14 @@ public class UserRepository {
         return null;
     }
 
-    public static void LoadUsers() {
+    public static ArrayList<User> getUsers() {
+        return Users;
+    }
+
+    public static void loadUsers() {
         try {
             Encription encription = new Encription();
-
             Users.clear();
-
             try (DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(FILE_NAME)))) {
                 byte[] encryptedData = new byte[dis.available()];
                 dis.readFully(encryptedData);
@@ -47,7 +49,6 @@ public class UserRepository {
                             Integer.parseInt(splitUserData[3].trim()), Integer.parseInt(splitUserData[4].trim()),
                             Integer.parseInt(splitUserData[5].trim()), Integer.parseInt(splitUserData[6].trim())));
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -56,18 +57,15 @@ public class UserRepository {
         }
     }
 
-    public static void SaveUsers() {
+    public static void saveUsers() {
         try {
             Encription encription = new Encription();
-
             StringBuilder stringBuilder = new StringBuilder();
-
             for (User user : Users) {
                 stringBuilder.append(user.getUsername()).append(":").append(user.getPassword()).append(":").append(user.getTypeOfUser().equals(User.TypeOfUser.ADMIN) ? "admin" : "contestant").append(":");
                 stringBuilder.append(user.getCorrectAnsweredQuestions()).append(":").append(user.getTotalAnsweredQuestions()).append(":").append(user.getCurrentQuestionInSet()).append(":").append(user.getCurrentSet());
                 stringBuilder.append("\n");
             }
-
             String dataToEncrypt = stringBuilder.toString();
             byte[] encryptedData = encription.do_AESEncryption(dataToEncrypt);
             try (DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FILE_NAME)))) {
@@ -80,40 +78,45 @@ public class UserRepository {
         }
     }
 
-    public static boolean AddUser(User user) {
-        String password = user.getPassword();
-        String username = user.getUsername();
-        if (username.matches("^\\d.*") || !username.matches("^[a-zA-Z0-9]*$")) {
-            return false;
-        }
-
-        if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{6,}$")) {
-            return false;
-        }
-
-        for (User existingUser : Users) {
-            if (existingUser.getUsername().equals(username)) {
-                return false;
-            }
-        }
+    public static void addUser(User user) {
 
         Users.add(user);
-        SaveUsers();
-        LoadUsers();
-
-        return true;
+        saveUsers();
+        loadUsers();
     }
 
-    public static void DeleteByUsername(String username) {
+    public static void deleteByUsername(String username) {
         for (User user : Users) {
             if (user.getUsername().equals(username)) {
                 Users.remove(user);
                 break;
             }
         }
-        SaveUsers();
-        LoadUsers();
+        saveUsers();
+        loadUsers();
 
+    }
+
+    public static void updateUser(User user) {
+        for (User u : Users) {
+            if (u.getUsername().equals(user.getUsername())) {
+                Users.remove(u);
+                Users.add(user);
+                break;
+            }
+        }
+        saveUsers();
+        loadUsers();
+    }
+
+    public static User findUserByUsernamePasswordAndRole(String username, String password, User.TypeOfUser typeOfUser) {
+        for (User user : UserRepository.Users) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password) && user.getTypeOfUser() == typeOfUser) {
+
+                return user;
+            }
+        }
+        return null;
     }
 
 }
