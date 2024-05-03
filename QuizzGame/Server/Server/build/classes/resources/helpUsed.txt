@@ -1,0 +1,3 @@
+2:2:a:help_change_question
+2:5:a:help_half_half
+2:6:a:help_ask_friend
