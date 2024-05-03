@@ -262,13 +262,13 @@ public class Controller {
     private static void AnswerCurretnQuestion(User user, String body, PrintWriter pw) {
         try {
 
-            Question question = QuestionSetService.getQuestionByQuestionText(body.split("\n")[1]);
+            Question question = QuestionSetService.getQuestionByQuestionText(body.split("\n")[0]);
             if (question == null) {
                 pw.println("QUESTION NOT FOUND");
                 return;
             }
 
-            if (QuestionSetService.IsQuestionAnsweredCorrectly(question, body.split("\n")[2])) {
+            if (QuestionSetService.IsQuestionAnsweredCorrectly(question, body.split("\n")[1])) {
                 user.setCorrectAnsweredQuestions(user.getCorrectAnsweredQuestions() + 1);
                 pw.println("CORRECT");
 
@@ -287,12 +287,12 @@ public class Controller {
 
     private static void HelpFriend(User user, String body, PrintWriter pw) {
         try {
-            FriendHelp friendHelp = FriendHelpService.FindQuestionToAnswer(user.getUsername(), body.split("\n")[1], body.split("\n")[2]);
+            FriendHelp friendHelp = FriendHelpService.FindQuestionToAnswer(user.getUsername(), body.split("\n")[0], body.split("\n")[1]);
             if (friendHelp == null) {
                 pw.println("FriendHelp NOT FOUND");
                 return;
             }
-            friendHelp.setAnswer(body.split("\n")[3]);
+            friendHelp.setAnswer(body.split("\n")[2]);
             FriendHelpService.updateFriendHelpWithAnswer(friendHelp);
             pw.println("SUCCESS");
 
@@ -318,7 +318,7 @@ public class Controller {
     private static void AskForHelpFromFriend(User user, String body, PrintWriter pw) {
         try {
 
-            User friend = UserService.FindUser(body.split(":")[1]);
+            User friend = UserService.FindUser(body.split(":")[0]);
             if (friend == null) {
                 pw.println("FRIEND NOT FOUND");
                 return;

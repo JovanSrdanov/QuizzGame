@@ -519,7 +519,7 @@ public class ContestantWindow extends javax.swing.JFrame {
             selectedAnswer = jRadioButton4.getText();
         }
 
-        String request = "AnswerCurretnQuestion\n" + "EMPTY" + "\n" + jLabel1.getText() + "\n" + selectedAnswer + "\n";
+        String request = "AnswerCurretnQuestion\n" + jLabel1.getText() + "\n" + selectedAnswer + "\n";
         String response = Main.HandleDataFromRequestAfterResponse(request);
         if (response.equals("CORRECT")) {
 
@@ -532,7 +532,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String request = "HalfHalfQuestion\n" + "EMPTY" + "\n";
+        String request = "HalfHalfQuestion\nEMPTY";
         String response = Main.HandleDataFromRequestAfterResponse(request);
         if (response.equals("CAN NOT USE THIS HELP AT THIS MOMENT!")) {
             JOptionPane.showMessageDialog(this, response, response, JOptionPane.ERROR_MESSAGE);
@@ -566,7 +566,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        String request = "AskForHelpFromFriend\n" + "EMPTY" + ":" + (String) jComboBox1.getSelectedItem();
+        String request = "AskForHelpFromFriend\n" + (String) jComboBox1.getSelectedItem();
         String response = Main.HandleDataFromRequestAfterResponse(request);
         if (!response.equals("SUCCESS")) {
             JOptionPane.showMessageDialog(this, response, response, JOptionPane.ERROR_MESSAGE);
@@ -576,7 +576,7 @@ public class ContestantWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        String request = "SwitchQuestion\n" + "EMPTY";
+        String request = "SwitchQuestion\nEMPTY";
         String response = Main.HandleDataFromRequestAfterResponse(request);
         if (response.equals("CAN NOT USE THIS HELP AT THIS MOMENT!")) {
             JOptionPane.showMessageDialog(this, response, response, JOptionPane.ERROR_MESSAGE);
@@ -640,7 +640,7 @@ public class ContestantWindow extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Not answered!", "Not answered!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            String request = "HelpFriend\n" + "EMPTY" + "\n" + WhoAsked + "\n" + Question + "\n" + Answer;
+            String request = "HelpFriend\n" + WhoAsked + "\n" + Question + "\n" + Answer;
 
             String response = Main.HandleDataFromRequestAfterResponse(request);
             if (response.equals("SUCCESS")) {
