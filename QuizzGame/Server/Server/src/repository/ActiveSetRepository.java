@@ -1,4 +1,4 @@
-package database;
+package repository;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ActiveSetDataBase {
+public class ActiveSetRepository {
 
     public static int ActiveSet;
     private static final String FILE_NAME = "src/resources/activeSet.txt";
@@ -47,7 +47,7 @@ public class ActiveSetDataBase {
                 writer.newLine();
             }
         } catch (IOException ex) {
-            Logger.getLogger(UserDataBase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -1,10 +1,10 @@
 package main;
 
-import database.ActiveSetDataBase;
-import database.FriendHelpDataBase;
-import database.HelpUsedByContestantInSetDataBase;
-import database.QuestionSetDataBase;
-import database.UserDataBase;
+import repository.ActiveSetRepository;
+import repository.FriendHelpRepository;
+import repository.HelpUsedByContestantInSetRepository;
+import repository.QuestionSetRepository;
+import repository.UserRepository;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -73,11 +73,11 @@ public class ServerMain {
     }
 
     private static void LoadData() {
-        QuestionSetDataBase.LoadQuestionSets();
-        UserDataBase.LoadUsers();
-        ActiveSetDataBase.LoadActiveSets();
-        HelpUsedByContestantInSetDataBase.LoadHelpsUsedByContestantsInSets();
-        FriendHelpDataBase.LoadFriendHelps();
+        QuestionSetRepository.LoadQuestionSets();
+        UserRepository.LoadUsers();
+        ActiveSetRepository.LoadActiveSets();
+        HelpUsedByContestantInSetRepository.LoadHelpsUsedByContestantsInSets();
+        FriendHelpRepository.LoadFriendHelps();
     }
 
 }

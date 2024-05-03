@@ -1,4 +1,4 @@
-package database;
+package repository;
 
 import encription.Encription;
 import java.io.BufferedInputStream;
@@ -14,14 +14,14 @@ import java.util.logging.Logger;
 
 import model.User;
 
-public class UserDataBase {
+public class UserRepository {
 
     public static ArrayList<User> Users = new ArrayList<>();
     private static final String FILE_NAME = "src/resources/users.txt";
 
     public static User FindUser(String username) {
 
-        for (User user : UserDataBase.Users) {
+        for (User user : UserRepository.Users) {
             if (user.getUsername().equals(username)) {
                 return user;
             }
@@ -52,7 +52,7 @@ public class UserDataBase {
                 e.printStackTrace();
             }
         } catch (Exception ex) {
-            Logger.getLogger(UserDataBase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -76,7 +76,7 @@ public class UserDataBase {
                 e.printStackTrace();
             }
         } catch (Exception ex) {
-            Logger.getLogger(UserDataBase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

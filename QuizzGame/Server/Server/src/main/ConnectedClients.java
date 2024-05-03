@@ -1,10 +1,10 @@
 package main;
 
-import database.ActiveSetDataBase;
-import database.FriendHelpDataBase;
-import database.HelpUsedByContestantInSetDataBase;
-import database.QuestionSetDataBase;
-import database.UserDataBase;
+import repository.ActiveSetRepository;
+import repository.FriendHelpRepository;
+import repository.HelpUsedByContestantInSetRepository;
+import repository.QuestionSetRepository;
+import repository.UserRepository;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -159,7 +159,7 @@ public class ConnectedClients implements Runnable {
             User.TypeOfUser typeOfUser = loginInfo[2].equals("admin") ? User.TypeOfUser.ADMIN : User.TypeOfUser.CONTESTANT;
 
             boolean found = false;
-            for (User user : UserDataBase.Users) {
+            for (User user : UserRepository.Users) {
                 if (user.getUsername().equals(username) && user.getPassword().equals(password) && user.getTypeOfUser() == typeOfUser) {
                     found = true;
                     break;
@@ -177,12 +177,12 @@ public class ConnectedClients implements Runnable {
 
     private static void RemoveUser(String body, PrintWriter pw) {
 
-        UserDataBase.DeleteByUsername(body);
+        UserRepository.DeleteByUsername(body);
         pw.println("Done");
     }
 
     private static void SetActiveSet(String body, PrintWriter pw) {
-        ActiveSetDataBase.SetActiveSet(Integer.parseInt(body));
+        ActiveSetRepository.SetActiveSet(Integer.parseInt(body));
         pw.println("Done");
     }
 
@@ -192,7 +192,7 @@ public class ConnectedClients implements Runnable {
             String username = userInfo[0];
             String password = userInfo[1];
             String userType = userInfo[2];
-            if (UserDataBase.AddUser(new User(username, password, userType, 0, 0, 1, 0))) {
+            if (UserRepository.AddUser(new User(username, password, userType, 0, 0, 1, 0))) {
                 pw.println("SUCCESS");
             } else {
                 pw.println("FAILED");
@@ -205,7 +205,7 @@ public class ConnectedClients implements Runnable {
     }
 
     private static void GetTableResults(String body, PrintWriter pw) {
-        User user = UserDataBase.FindUser(body.trim());
+        User user = UserRepository.FindUser(body.trim());
         if (user == null) {
             pw.println("USER NOT FOUND");
             return;
@@ -213,9 +213,9 @@ public class ConnectedClients implements Runnable {
 
         StringBuilder sb = new StringBuilder("");
 
-        Collections.sort(UserDataBase.Users, (User user1, User user2) -> Integer.compare(user2.getCorrectAnsweredQuestions(), user1.getCorrectAnsweredQuestions()));
+        Collections.sort(UserRepository.Users, (User user1, User user2) -> Integer.compare(user2.getCorrectAnsweredQuestions(), user1.getCorrectAnsweredQuestions()));
 
-        for (User u : UserDataBase.Users) {
+        for (User u : UserRepository.Users) {
             if (u.getTypeOfUser().equals(User.TypeOfUser.CONTESTANT)) {
                 sb.append(u.getUsername()).append(":").append(u.getTypeOfUserToString()).append(":").append(u.getCorrectAnsweredQuestions()).append(":").append(u.getTotalAnsweredQuestions()).append(":").append(u.getCurrentQuestionInSet()).append(":").append(u.getCurrentSet()).append("\n");
             }
@@ -226,19 +226,19 @@ public class ConnectedClients implements Runnable {
 
     private static void GetCurrentQuestion(String body, PrintWriter pw) {
 
-        User user = UserDataBase.FindUser(body);
+        User user = UserRepository.FindUser(body);
         if (user == null) {
             pw.println("USER NOT FOUND");
             return;
         }
-        int ActiveSet = ActiveSetDataBase.ActiveSet;
+        int ActiveSet = ActiveSetRepository.ActiveSet;
         if (ActiveSet != user.getCurrentSet()) {
             user.setCurrentSet(ActiveSet);
             user.setCurrentQuestionInSet(1);
         }
-        UserDataBase.SaveUsers();
+        UserRepository.SaveUsers();
 
-        Question question = QuestionSetDataBase.GetQuestion(user.getCurrentSet(), user.getCurrentQuestionInSet());
+        Question question = QuestionSetRepository.GetQuestion(user.getCurrentSet(), user.getCurrentQuestionInSet());
         if (question == null) {
             pw.println("NO QUESTION");
             return;
@@ -259,12 +259,12 @@ public class ConnectedClients implements Runnable {
     private static void AnswerCurretnQuestion(String body, PrintWriter pw) {
         try {
 
-            User user = UserDataBase.FindUser(body.split("\n")[0]);
+            User user = UserRepository.FindUser(body.split("\n")[0]);
             if (user == null) {
                 pw.println("USER NOT FOUND");
                 return;
             }
-            Question question = QuestionSetDataBase.getQuestionByQuestionText(body.split("\n")[1]);
+            Question question = QuestionSetRepository.getQuestionByQuestionText(body.split("\n")[1]);
             if (question == null) {
                 pw.println("QUESTION NOT FOUND");
                 return;
@@ -279,7 +279,7 @@ public class ConnectedClients implements Runnable {
             user.setCurrentQuestionInSet(user.getCurrentQuestionInSet() + 1);
             user.setTotalAnsweredQuestions(user.getTotalAnsweredQuestions() + 1);
 
-            UserDataBase.SaveUsers();
+            UserRepository.SaveUsers();
 
         } catch (Exception e) {
             pw.println("ERROR");
@@ -288,19 +288,19 @@ public class ConnectedClients implements Runnable {
 
     private static void HelpFriend(String body, PrintWriter pw) {
         try {
-            User user = UserDataBase.FindUser(body.split("\n")[0]);
+            User user = UserRepository.FindUser(body.split("\n")[0]);
             if (user == null) {
                 pw.println("USER NOT FOUND");
                 return;
             }
-            FriendHelp friendHelp = FriendHelpDataBase.FindQuestionToAnswer(user.getUsername(), body.split("\n")[1], body.split("\n")[2]);
+            FriendHelp friendHelp = FriendHelpRepository.FindQuestionToAnswer(user.getUsername(), body.split("\n")[1], body.split("\n")[2]);
 
             if (friendHelp == null) {
                 pw.println("FriendHelp NOT FOUND");
                 return;
             }
             friendHelp.setAnswer(body.split("\n")[3]);
-            FriendHelpDataBase.SaveFriendHelps();
+            FriendHelpRepository.SaveFriendHelps();
 
             pw.println("SUCCESS");
 
@@ -311,14 +311,14 @@ public class ConnectedClients implements Runnable {
 
     private static void FriendsInNeedOfHelp(String body, PrintWriter pw) {
         try {
-            User user = UserDataBase.FindUser(body);
+            User user = UserRepository.FindUser(body);
             if (user == null) {
                 pw.println("USER NOT FOUND");
                 return;
             }
 
             StringBuilder sb = new StringBuilder("");
-            for (FriendHelp fh : FriendHelpDataBase.getUnAnsweredQuestions(user.getUsername())) {
+            for (FriendHelp fh : FriendHelpRepository.getUnAnsweredQuestions(user.getUsername())) {
                 sb.append(fh.getWhoAskedForHelp()).append("__").append(fh.getAnswerGiver()).append("__").append(fh.getAnswer()).append("__").append(fh.getQuestion()).append("\n");
             }
             pw.println(sb);
@@ -331,25 +331,25 @@ public class ConnectedClients implements Runnable {
     private static void AskForHelpFromFriend(String body, PrintWriter pw) {
         try {
 
-            User user = UserDataBase.FindUser(body.split(":")[0]);
+            User user = UserRepository.FindUser(body.split(":")[0]);
             if (user == null) {
                 pw.println("USER NOT FOUND");
                 return;
             }
-            User friend = UserDataBase.FindUser(body.split(":")[1]);
+            User friend = UserRepository.FindUser(body.split(":")[1]);
             if (friend == null) {
                 pw.println("FRIEND NOT FOUND");
                 return;
             }
             HelpUsedByContestantInSet help = new HelpUsedByContestantInSet(user.getCurrentSet(), user.getCurrentQuestionInSet(), user.getUsername(), HELP_ASK_FRIEND);
-            if (HelpUsedByContestantInSetDataBase.UseHelp(help)) {
+            if (HelpUsedByContestantInSetRepository.UseHelp(help)) {
 
-                Question question = QuestionSetDataBase.GetQuestion(user.getCurrentSet(), user.getCurrentQuestionInSet());
+                Question question = QuestionSetRepository.GetQuestion(user.getCurrentSet(), user.getCurrentQuestionInSet());
                 if (question == null) {
                     pw.println("NO QUESTION");
                     return;
                 }
-                FriendHelpDataBase.AddFriendHelp(new FriendHelp(user.getUsername(), body.split(":")[1], "EMPTY", question.getQuestion()));
+                FriendHelpRepository.AddFriendHelp(new FriendHelp(user.getUsername(), body.split(":")[1], "EMPTY", question.getQuestion()));
                 pw.println("SUCCESS");
 
             } else {
@@ -364,14 +364,14 @@ public class ConnectedClients implements Runnable {
     private static void GetHelpFromFriends(String body, PrintWriter pw) {
 
         try {
-            User user = UserDataBase.FindUser(body);
+            User user = UserRepository.FindUser(body);
             if (user == null) {
                 pw.println("USER NOT FOUND");
                 return;
             }
 
             StringBuilder sb = new StringBuilder("");
-            for (FriendHelp fh : FriendHelpDataBase.getHelpAskedByContestant(user.getUsername())) {
+            for (FriendHelp fh : FriendHelpRepository.getHelpAskedByContestant(user.getUsername())) {
                 sb.append(fh.getWhoAskedForHelp()).append("__").append(fh.getAnswerGiver()).append("__").append(fh.getAnswer()).append("__").append(fh.getQuestion()).append("\n");
             }
             pw.println(sb);
@@ -384,14 +384,14 @@ public class ConnectedClients implements Runnable {
     private static void SwitchQuestion(String body, PrintWriter pw) {
         try {
 
-            User user = UserDataBase.FindUser(body);
+            User user = UserRepository.FindUser(body);
             if (user == null) {
                 pw.println("USER NOT FOUND");
                 return;
             }
             HelpUsedByContestantInSet help = new HelpUsedByContestantInSet(user.getCurrentSet(), user.getCurrentQuestionInSet(), user.getUsername(), HELP_CHANGE_QUESTION);
-            if (HelpUsedByContestantInSetDataBase.UseHelp(help)) {
-                Question question = QuestionSetDataBase.GetQuestion(user.getCurrentSet(), 11);
+            if (HelpUsedByContestantInSetRepository.UseHelp(help)) {
+                Question question = QuestionSetRepository.GetQuestion(user.getCurrentSet(), 11);
                 if (question == null) {
                     pw.println("NO QUESTION");
                     return;
@@ -418,15 +418,15 @@ public class ConnectedClients implements Runnable {
 
         try {
 
-            User user = UserDataBase.FindUser(body);
+            User user = UserRepository.FindUser(body);
             if (user == null) {
                 pw.println("USER NOT FOUND");
                 return;
             }
             HelpUsedByContestantInSet help = new HelpUsedByContestantInSet(user.getCurrentSet(), user.getCurrentQuestionInSet(), user.getUsername(), HELP_HALF_HALF);
-            if (HelpUsedByContestantInSetDataBase.UseHelp(help)) {
+            if (HelpUsedByContestantInSetRepository.UseHelp(help)) {
                 StringBuilder sb = new StringBuilder("");
-                Question question = QuestionSetDataBase.GetQuestion(user.getCurrentSet(), user.getCurrentQuestionInSet());
+                Question question = QuestionSetRepository.GetQuestion(user.getCurrentSet(), user.getCurrentQuestionInSet());
                 if (question == null) {
                     pw.println("NO QUESTION");
                     return;
@@ -447,7 +447,7 @@ public class ConnectedClients implements Runnable {
 
     private static void GetAllUsers(String body, PrintWriter pw) {
         StringBuilder sb = new StringBuilder("");
-        for (User u : UserDataBase.Users) {
+        for (User u : UserRepository.Users) {
             sb.append(u.getUsername()).append(":").append(u.getTypeOfUserToString()).append("\n");
 
         }
@@ -456,7 +456,7 @@ public class ConnectedClients implements Runnable {
 
     private static void GetActiveSet(String body, PrintWriter pw) {
         StringBuilder sb = new StringBuilder("");
-        for (int u : ActiveSetDataBase.LoadActiveSets()) {
+        for (int u : ActiveSetRepository.LoadActiveSets()) {
             sb.append(u).append("\n");
         }
         pw.println(sb.toString());

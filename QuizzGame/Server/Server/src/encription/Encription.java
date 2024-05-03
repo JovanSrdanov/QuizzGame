@@ -1,6 +1,6 @@
 package encription;
 
-import database.UserDataBase;
+import repository.UserRepository;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.logging.Level;
@@ -27,7 +27,7 @@ public class Encription {
             keyGenerator.init(128, secureRandom);
             return keyGenerator.generateKey();
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(UserDataBase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

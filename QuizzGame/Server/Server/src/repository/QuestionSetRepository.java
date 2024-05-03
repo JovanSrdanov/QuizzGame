@@ -1,4 +1,4 @@
-package database;
+package repository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import model.Question;
 import model.QuestionSet;
 
-public class QuestionSetDataBase {
+public class QuestionSetRepository {
 
     public static ArrayList<QuestionSet> QuestionSets = new ArrayList<>();
 

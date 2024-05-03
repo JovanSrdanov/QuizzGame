@@ -1,4 +1,4 @@
-package database;
+package repository;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import model.HelpUsedByContestantInSet;
 
-public class HelpUsedByContestantInSetDataBase {
+public class HelpUsedByContestantInSetRepository {
 
     public static ArrayList<HelpUsedByContestantInSet> HelpsUsedByContestantsInSets = new ArrayList<>();
     private static final String FILE_NAME = "src/resources/helpUsed.txt";
