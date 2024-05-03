@@ -19,6 +19,7 @@ import model.FriendHelp;
 import model.HelpUsedByContestantInSet;
 import model.Question;
 import model.User;
+import service.ActiveSetService;
 
 public class ConnectedClients implements Runnable {
 
@@ -231,7 +232,7 @@ public class ConnectedClients implements Runnable {
             pw.println("USER NOT FOUND");
             return;
         }
-        int ActiveSet = ActiveSetRepository.ActiveSet;
+        int ActiveSet = ActiveSetService.getActiveSet();
         if (ActiveSet != user.getCurrentSet()) {
             user.setCurrentSet(ActiveSet);
             user.setCurrentQuestionInSet(1);
@@ -456,7 +457,7 @@ public class ConnectedClients implements Runnable {
 
     private static void GetActiveSet(String body, PrintWriter pw) {
         StringBuilder sb = new StringBuilder("");
-        for (int u : ActiveSetRepository.LoadActiveSets()) {
+        for (int u : ActiveSetRepository.getActiveSets()) {
             sb.append(u).append("\n");
         }
         pw.println(sb.toString());

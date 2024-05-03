@@ -13,36 +13,43 @@ import java.util.logging.Logger;
 
 public class ActiveSetRepository {
 
-    public static int ActiveSet;
+    private static List<Integer> ActiveSets = new ArrayList<>();
     private static final String FILE_NAME = "src/resources/activeSet.txt";
 
-    public static List<Integer> LoadActiveSets() {
+    public static List<Integer> getActiveSets() {
+        return ActiveSets;
+    }
+
+    public static Integer getActiveSet() {
+        if (ActiveSets.isEmpty()) {
+            return 0;
+        } else {
+            return ActiveSets.get(ActiveSets.size() - 1);
+        }
+    }
+
+    public static void LoadActiveSets() {
 
         List<Integer> activeSets = new ArrayList<>();
-
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 activeSets.add(Integer.valueOf(line.trim()));
             }
         } catch (FileNotFoundException e) {
-
             activeSets.add(1);
-            SaveActiveSet(activeSets);
-
+            SaveActiveSet();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ActiveSet = activeSets.get(activeSets.size() - 1);
-
-        return activeSets;
+        ActiveSets = activeSets;
 
     }
 
-    private static void SaveActiveSet(List<Integer> activeSets) {
+    private static void SaveActiveSet() {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            for (int activeSet : activeSets) {
+            for (int activeSet : ActiveSets) {
                 writer.write(Integer.toString(activeSet));
                 writer.newLine();
             }
@@ -51,16 +58,9 @@ public class ActiveSetRepository {
         }
     }
 
-    public static boolean SetActiveSet(int set) {
-        List<Integer> activeSets = LoadActiveSets();
-        if (activeSets.contains(set)) {
-            return false;
-        }
-        ActiveSet = set;
-        activeSets.add(set);
-        SaveActiveSet(activeSets);
+    public static void SetActiveSet(int set) {
+        ActiveSets.add(set);
+        SaveActiveSet();
         LoadActiveSets();
-        return true;
-
     }
 }
