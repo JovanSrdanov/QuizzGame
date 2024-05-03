@@ -331,7 +331,7 @@ public class Controller {
                     pw.println("NO QUESTION");
                     return;
                 }
-                FriendHelpService.addFriendHelp(new FriendHelp(user.getUsername(), body.split(":")[1], "EMPTY", question.getQuestion()));
+                FriendHelpService.addFriendHelp(new FriendHelp(user.getUsername(), body.split(":")[0], "EMPTY", question.getQuestion()));
                 pw.println("SUCCESS");
 
             } else {

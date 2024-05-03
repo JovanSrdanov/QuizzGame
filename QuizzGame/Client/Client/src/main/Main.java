@@ -50,12 +50,12 @@ public class Main {
                 }
                 messageBuilder.append((char) character);
                 if (messageBuilder.toString().endsWith("\r\n")) {
-                    String message = messageBuilder.substring(0, messageBuilder.length() - 2); // Remove the "\r\n"
+                    String message = messageBuilder.substring(0, messageBuilder.length() - 2);
                     if (message.equals("USER NOT FOUND")) {
                         JOptionPane.showMessageDialog(null, "The user that logged in with this credentials no longer exists", "USER NOT FOUND", JOptionPane.ERROR_MESSAGE);
                         System.exit(1);
                     }
-                    System.out.println("Message recieved:");
+                    System.out.println("------------------------- Message recieved:");
                     System.out.println(messageBuilder.toString().trim());
                     return messageBuilder.toString().trim();
                 }
@@ -69,7 +69,7 @@ public class Main {
     }
 
     private static void RequestInterceptor(String request) {
-        System.out.println("Message sent:");
+        System.out.println("------------------------- Message sent:");
         System.out.println(request);
         pw.println(authorizationToken + "\n" + request);
     }
